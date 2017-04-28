@@ -53,18 +53,25 @@ typedef struct vita2d_font vita2d_font;
 typedef struct vita2d_pgf vita2d_pgf;
 typedef struct vita2d_pvf vita2d_pvf;
 
+#ifdef __MODULE__
+int vita2d_init(SceGxmContext *pCtx, SceGxmShaderPatcher *pPatcher);
+int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGxmShaderPatcher *pPatcher);
+#else
 int vita2d_init();
 int vita2d_init_advanced(unsigned int temp_pool_size);
 void vita2d_wait_rendering_done();
+#endif
 int vita2d_fini();
 
 void vita2d_clear_screen();
 void vita2d_swap_buffers();
 
+#ifndef __MODULE__
 void vita2d_start_drawing();
 void vita2d_end_drawing();
 
 int vita2d_common_dialog_update();
+#endif
 
 void vita2d_set_clear_color(unsigned int color);
 unsigned int vita2d_get_clear_color();

@@ -157,15 +157,25 @@ static void display_callback(const void *callback_data)
 	}
 }
 
+#ifdef __MODULE__
+int vita2d_init(SceGxmContext *pCtx, SceGxmShaderPatcher *pPatcher)
+#else
 int vita2d_init()
+#endif
 {
-	return vita2d_init_advanced(DEFAULT_TEMP_POOL_SIZE);
+	return vita2d_init_advanced(DEFAULT_TEMP_POOL_SIZE, pCtx, pPatcher);
 }
 
+#ifdef __MODULE__
+int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGxmShaderPatcher *pPatcher)
+#else
 int vita2d_init_advanced(unsigned int temp_pool_size)
+#endif
 {
 	int err;
+#ifndef __MODULE__
 	unsigned int i, x, y;
+#endif
 	UNUSED(err);
 
 	if (vita2d_initialized) {
@@ -173,6 +183,10 @@ int vita2d_init_advanced(unsigned int temp_pool_size)
 		return 1;
 	}
 
+#ifdef __MODULE__
+    _vita2d_context = pCtx;
+	shaderPatcher = pPatcher;
+#else
 	SceGxmInitializeParams initializeParams;
 	memset(&initializeParams, 0, sizeof(SceGxmInitializeParams));
 	initializeParams.flags				= 0;
@@ -376,6 +390,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size)
 
 	err = sceGxmShaderPatcherCreate(&patcherParams, &shaderPatcher);
 	DEBUG("sceGxmShaderPatcherCreate(): 0x%08X\n", err);
+#endif
 
 	// check the shaders
 	err = sceGxmProgramCheck(clearVertexProgramGxp);
@@ -624,10 +639,12 @@ int vita2d_init_advanced(unsigned int temp_pool_size)
 	backBufferIndex = 0;
 	frontBufferIndex = 0;
 
+#ifndef __MODULE__
 	pgf_module_was_loaded = sceSysmoduleIsLoaded(SCE_SYSMODULE_PGF);
 
 	if (pgf_module_was_loaded != SCE_SYSMODULE_LOADED)
 		sceSysmoduleLoadModule(SCE_SYSMODULE_PGF);
+#endif
 
 	vita2d_initialized = 1;
 	return 1;
@@ -750,6 +767,7 @@ void vita2d_swap_buffers()
 	backBufferIndex = (backBufferIndex + 1) % DISPLAY_BUFFER_COUNT;
 }
 
+#ifndef __MODULE__
 void vita2d_start_drawing()
 {
 	/* Reset the temporary memory pool */
@@ -777,6 +795,7 @@ void vita2d_end_drawing()
 	sceGxmEndScene(_vita2d_context, NULL, NULL);
 	drawing = 0;
 }
+#endif
 
 void vita2d_enable_clipping()
 {
@@ -861,6 +880,7 @@ void vita2d_get_clip_rectangle(int *x_min, int *y_min, int *x_max, int *y_max)
 	*y_max = clip_rect_y_max;
 }
 
+#ifndef __MODULE__
 int vita2d_common_dialog_update()
 {
 	SceCommonDialogUpdateParam updateParam;
@@ -878,6 +898,7 @@ int vita2d_common_dialog_update()
 
 	return sceCommonDialogUpdate(&updateParam);
 }
+#endif
 
 void vita2d_set_clear_color(unsigned int color)
 {
