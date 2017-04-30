@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/gxm.h>
+#include "utils.h"
 #include "vita2d.h"
 
 #define BMP_SIGNATURE (0x4D42)
@@ -42,7 +43,7 @@ static vita2d_texture *_vita2d_load_BMP_generic(
 		row_stride += 4-(row_stride%4);
 	}
 
-	void *buffer = malloc(row_stride);
+	void *buffer = sce_malloc(row_stride);
 	if (!buffer)
 		return NULL;
 
@@ -51,7 +52,7 @@ static vita2d_texture *_vita2d_load_BMP_generic(
 		bmp_ih->biHeight);
 
 	if (!texture) {
-		free(buffer);
+		sce_free(buffer);
 		return NULL;
 	}
 
@@ -93,7 +94,7 @@ static vita2d_texture *_vita2d_load_BMP_generic(
 		}
 	}
 
-	free(buffer);
+	sce_free(buffer);
 
 	return texture;
 }

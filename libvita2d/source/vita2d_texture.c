@@ -57,7 +57,7 @@ vita2d_texture *vita2d_create_empty_texture_format(unsigned int w, unsigned int 
 	if (w > GXM_TEX_MAX_SIZE || h > GXM_TEX_MAX_SIZE)
 		return NULL;
 
-	vita2d_texture *texture = malloc(sizeof(*texture));
+	vita2d_texture *texture = sce_malloc(sizeof(*texture));
 	if (!texture)
 		return NULL;
 
@@ -72,7 +72,7 @@ vita2d_texture *vita2d_create_empty_texture_format(unsigned int w, unsigned int 
 		&texture->data_UID);
 
 	if (!texture_data) {
-		free(texture);
+		sce_free(texture);
 		return NULL;
 	}
 
@@ -122,7 +122,7 @@ void vita2d_free_texture(vita2d_texture *texture)
 			gpu_free(texture->palette_UID);
 		}
 		gpu_free(texture->data_UID);
-		free(texture);
+		sce_free(texture);
 	}
 }
 

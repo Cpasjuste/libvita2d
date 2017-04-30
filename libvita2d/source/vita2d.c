@@ -12,7 +12,7 @@
 #  include <stdio.h>
 #  define DEBUG(...) printf(__VA_ARGS__)
 #else
-#  define DEBUG(...)
+#  define DEBUG_PRINT(...)
 #endif
 
 /* Defines */
@@ -112,7 +112,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
     UNUSED(err);
 
     if (vita2d_initialized) {
-        DEBUG("libvita2d is already initialized!\n");
+        DEBUG_PRINT("libvita2d is already initialized!\n");
         return 1;
     }
 
@@ -122,44 +122,44 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
     // check the shaders
 #ifdef USE_CLEAR_VERTEX
     err = sceGxmProgramCheck(clearVertexProgramGxp);
-    DEBUG("clear_v sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("clear_v sceGxmProgramCheck(): 0x%08X\n", err);
     err = sceGxmProgramCheck(clearFragmentProgramGxp);
-    DEBUG("clear_f sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("clear_f sceGxmProgramCheck(): 0x%08X\n", err);
 #endif
     err = sceGxmProgramCheck(colorVertexProgramGxp);
-    DEBUG("color_v sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("color_v sceGxmProgramCheck(): 0x%08X\n", err);
     err = sceGxmProgramCheck(colorFragmentProgramGxp);
-    DEBUG("color_f sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("color_f sceGxmProgramCheck(): 0x%08X\n", err);
     err = sceGxmProgramCheck(textureVertexProgramGxp);
-    DEBUG("texture_v sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_v sceGxmProgramCheck(): 0x%08X\n", err);
     err = sceGxmProgramCheck(textureFragmentProgramGxp);
-    DEBUG("texture_f sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_f sceGxmProgramCheck(): 0x%08X\n", err);
     err = sceGxmProgramCheck(textureTintFragmentProgramGxp);
-    DEBUG("texture_tint_f sceGxmProgramCheck(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_tint_f sceGxmProgramCheck(): 0x%08X\n", err);
 
 #ifdef USE_CLEAR_VERTEX
     // register programs with the patcher
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, clearVertexProgramGxp, &clearVertexProgramId);
-    DEBUG("clear_v sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("clear_v sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, clearFragmentProgramGxp, &clearFragmentProgramId);
-    DEBUG("clear_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("clear_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 #endif
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, colorVertexProgramGxp, &colorVertexProgramId);
-    DEBUG("color_v sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("color_v sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, colorFragmentProgramGxp, &colorFragmentProgramId);
-    DEBUG("color_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("color_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, textureVertexProgramGxp, &textureVertexProgramId);
-    DEBUG("texture_v sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_v sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, textureFragmentProgramGxp, &textureFragmentProgramId);
-    DEBUG("texture_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherRegisterProgram(shaderPatcher, textureTintFragmentProgramGxp,
                                              &textureTintFragmentProgramId);
-    DEBUG("texture_tint_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_tint_f sceGxmShaderPatcherRegisterProgram(): 0x%08X\n", err);
 
     // Fill SceGxmBlendInfo
     static const SceGxmBlendInfo blend_info = {
@@ -198,7 +198,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             1,
             &clearVertexProgram);
 
-    DEBUG("clear sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("clear sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherCreateFragmentProgram(
             shaderPatcher,
@@ -209,7 +209,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             clearVertexProgramGxp,
             &clearFragmentProgram);
 
-    DEBUG("clear sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("clear sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
 
     // create the clear triangle vertex/index data
     clearVertices = (vita2d_clear_vertex *) gpu_alloc(
@@ -240,11 +240,11 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
 
     const SceGxmProgramParameter *paramColorPositionAttribute = sceGxmProgramFindParameterByName(colorVertexProgramGxp,
                                                                                                  "aPosition");
-    DEBUG("aPosition sceGxmProgramFindParameterByName(): %p\n", paramColorPositionAttribute);
+    DEBUG_PRINT("aPosition sceGxmProgramFindParameterByName(): %p\n", paramColorPositionAttribute);
 
     const SceGxmProgramParameter *paramColorColorAttribute = sceGxmProgramFindParameterByName(colorVertexProgramGxp,
                                                                                               "aColor");
-    DEBUG("aColor sceGxmProgramFindParameterByName(): %p\n", paramColorColorAttribute);
+    DEBUG_PRINT("aColor sceGxmProgramFindParameterByName(): %p\n", paramColorColorAttribute);
 
     // create color vertex format
     SceGxmVertexAttribute colorVertexAttributes[2];
@@ -275,7 +275,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             1,
             &_vita2d_colorVertexProgram);
 
-    DEBUG("color sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("color sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherCreateFragmentProgram(
             shaderPatcher,
@@ -286,16 +286,16 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             colorVertexProgramGxp,
             &_vita2d_colorFragmentProgram);
 
-    DEBUG("color sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("color sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
 
 
     const SceGxmProgramParameter *paramTexturePositionAttribute = sceGxmProgramFindParameterByName(
             textureVertexProgramGxp, "aPosition");
-    DEBUG("aPosition sceGxmProgramFindParameterByName(): %p\n", paramTexturePositionAttribute);
+    DEBUG_PRINT("aPosition sceGxmProgramFindParameterByName(): %p\n", paramTexturePositionAttribute);
 
     const SceGxmProgramParameter *paramTextureTexcoordAttribute = sceGxmProgramFindParameterByName(
             textureVertexProgramGxp, "aTexcoord");
-    DEBUG("aTexcoord sceGxmProgramFindParameterByName(): %p\n", paramTextureTexcoordAttribute);
+    DEBUG_PRINT("aTexcoord sceGxmProgramFindParameterByName(): %p\n", paramTextureTexcoordAttribute);
 
     // create texture vertex format
     SceGxmVertexAttribute textureVertexAttributes[2];
@@ -326,7 +326,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             1,
             &_vita2d_textureVertexProgram);
 
-    DEBUG("texture sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("texture sceGxmShaderPatcherCreateVertexProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherCreateFragmentProgram(
             shaderPatcher,
@@ -337,7 +337,7 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             textureVertexProgramGxp,
             &_vita2d_textureFragmentProgram);
 
-    DEBUG("texture sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("texture sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
 
     err = sceGxmShaderPatcherCreateFragmentProgram(
             shaderPatcher,
@@ -348,21 +348,21 @@ int vita2d_init_advanced(unsigned int temp_pool_size, SceGxmContext *pCtx, SceGx
             textureVertexProgramGxp,
             &_vita2d_textureTintFragmentProgram);
 
-    DEBUG("texture_tint sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
+    DEBUG_PRINT("texture_tint sceGxmShaderPatcherCreateFragmentProgram(): 0x%08X\n", err);
 
 #ifdef USE_CLEAR_VERTEX
     // find vertex uniforms by name and cache parameter information
     _vita2d_clearClearColorParam = sceGxmProgramFindParameterByName(clearFragmentProgramGxp, "uClearColor");
-    DEBUG("_vita2d_clearClearColorParam sceGxmProgramFindParameterByName(): %p\n", _vita2d_clearClearColorParam);
+    DEBUG_PRINT("_vita2d_clearClearColorParam sceGxmProgramFindParameterByName(): %p\n", _vita2d_clearClearColorParam);
 #endif
     _vita2d_colorWvpParam = sceGxmProgramFindParameterByName(colorVertexProgramGxp, "wvp");
-    DEBUG("color wvp sceGxmProgramFindParameterByName(): %p\n", _vita2d_colorWvpParam);
+    DEBUG_PRINT("color wvp sceGxmProgramFindParameterByName(): %p\n", _vita2d_colorWvpParam);
 
     _vita2d_textureWvpParam = sceGxmProgramFindParameterByName(textureVertexProgramGxp, "wvp");
-    DEBUG("texture wvp sceGxmProgramFindParameterByName(): %p\n", _vita2d_textureWvpParam);
+    DEBUG_PRINT("texture wvp sceGxmProgramFindParameterByName(): %p\n", _vita2d_textureWvpParam);
 
     _vita2d_textureTintColorParam = sceGxmProgramFindParameterByName(textureTintFragmentProgramGxp, "uTintColor");
-    DEBUG("texture wvp sceGxmProgramFindParameterByName(): %p\n", _vita2d_textureWvpParam);
+    DEBUG_PRINT("texture wvp sceGxmProgramFindParameterByName(): %p\n", _vita2d_textureWvpParam);
 
     // Allocate memory for the memory pool
     pool_size = temp_pool_size;
@@ -391,7 +391,7 @@ void vita2d_wait_rendering_done() {
 int vita2d_fini() {
 
     if (!vita2d_initialized) {
-        DEBUG("libvita2d is not initialized!\n");
+        DEBUG_PRINT("libvita2d is not initialized!\n");
         return 1;
     }
 

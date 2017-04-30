@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 #include "texture_atlas.h"
 
 texture_atlas *texture_atlas_create(int width, int height, SceGxmTextureFormat format)
 {
-	texture_atlas *atlas = malloc(sizeof(*atlas));
+	texture_atlas *atlas = sce_malloc(sizeof(*atlas));
 	if (!atlas)
 		return NULL;
 
@@ -18,7 +19,7 @@ texture_atlas *texture_atlas_create(int width, int height, SceGxmTextureFormat f
 							    height,
 							    format);
 	if (!atlas->texture) {
-		free(atlas);
+		sce_free(atlas);
 		return NULL;
 	}
 
@@ -37,7 +38,7 @@ void texture_atlas_free(texture_atlas *atlas)
 	vita2d_free_texture(atlas->texture);
 	bp2d_free(atlas->bp_root);
 	int_htab_free(atlas->htab);
-	free(atlas);
+	sce_free(atlas);
 }
 
 int texture_atlas_insert(texture_atlas *atlas, unsigned int character,
@@ -51,7 +52,7 @@ int texture_atlas_insert(texture_atlas *atlas, unsigned int character,
 	if (!bp2d_insert(atlas->bp_root, size, inserted_pos, &new_node))
 		return 0;
 
-	entry = malloc(sizeof(*entry));
+	entry = sce_malloc(sizeof(*entry));
 
 	entry->rect.x = inserted_pos->x;
 	entry->rect.y = inserted_pos->y;

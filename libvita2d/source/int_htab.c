@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 #include "int_htab.h"
 
 static inline unsigned int FNV_1a(unsigned int key)
@@ -15,14 +16,14 @@ static inline unsigned int FNV_1a(unsigned int key)
 
 int_htab *int_htab_create(size_t size)
 {
-	int_htab *htab = malloc(sizeof(*htab));
+	int_htab *htab = sce_malloc(sizeof(*htab));
 	if (!htab)
 		return NULL;
 
 	htab->size = size;
 	htab->used = 0;
 
-	htab->entries = malloc(htab->size * sizeof(*htab->entries));
+	htab->entries = sce_malloc(htab->size * sizeof(*htab->entries));
 	memset(htab->entries, 0, htab->size * sizeof(*htab->entries));
 
 	return htab;
@@ -33,9 +34,9 @@ void int_htab_free(int_htab *htab)
 	int i;
 	for (i = 0; i < htab->size; i++) {
 		if (htab->entries[i].value != NULL)
-			free(htab->entries[i].value);
+			sce_free(htab->entries[i].value);
 	}
-	free(htab);
+	sce_free(htab);
 }
 
 void int_htab_resize(int_htab *htab, unsigned int new_size)
@@ -49,7 +50,7 @@ void int_htab_resize(int_htab *htab, unsigned int new_size)
 
 	htab->size = new_size;
 	htab->used = 0;
-	htab->entries = malloc(new_size * sizeof(*htab->entries));
+	htab->entries = sce_malloc(new_size * sizeof(*htab->entries));
 	memset(htab->entries, 0, new_size * sizeof(*htab->entries));
 
 	for (i = 0; i < old_size; i++) {
@@ -58,7 +59,7 @@ void int_htab_resize(int_htab *htab, unsigned int new_size)
 		}
 	}
 
-	free(old_entries);
+	sce_free(old_entries);
 }
 
 int int_htab_insert(int_htab *htab, unsigned int key, void *value)

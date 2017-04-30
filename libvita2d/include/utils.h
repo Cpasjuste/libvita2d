@@ -13,6 +13,9 @@
 /* Font utils */
 int utf8_to_ucs2(const char *utf8, unsigned int *character);
 
+void* sce_malloc(size_t size);
+void sce_free(void* addr);
+
 /* GPU utils */
 void *gpu_alloc(SceKernelMemBlockType type, unsigned int size, unsigned int alignment, unsigned int attribs, SceUID *uid);
 void gpu_free(SceUID uid);

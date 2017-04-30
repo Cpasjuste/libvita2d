@@ -1,9 +1,10 @@
 #include <stdlib.h>
+#include "utils.h"
 #include "bin_packing_2d.h"
 
 bp2d_node *bp2d_create(const bp2d_rectangle *rect)
 {
-	bp2d_node *node = malloc(sizeof(*node));
+	bp2d_node *node = sce_malloc(sizeof(*node));
 	if (!node)
 		return NULL;
 
@@ -27,7 +28,7 @@ void bp2d_free(bp2d_node *node)
 		if (node->right) {
 			bp2d_free(node->right);
 		}
-		free(node);
+		sce_free(node);
 	}
 }
 

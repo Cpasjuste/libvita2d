@@ -2,6 +2,27 @@
 #include <math.h>
 #include <string.h>
 
+void *sce_malloc(size_t size) {
+
+    void* ptr = NULL;
+
+	SceUID m = sceKernelAllocMemBlock("vita2d", SCE_KERNEL_MEMBLOCK_TYPE_USER_RW, ALIGN(size, 4*1024), NULL);
+	if (m >= 0) {
+        sceKernelGetMemBlockBase(m, &ptr);
+    } else {
+        m = sceKernelAllocMemBlock("vita2d", SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW, ALIGN(size, 256*1024), NULL);
+        if (m >= 0) {
+            sceKernelGetMemBlockBase(m, &ptr);
+        }
+    }
+	return ptr;
+}
+
+void sce_free(void *p){
+	SceUID m = sceKernelFindMemBlockByAddr(p, 1);
+	if (m >= 0) sceKernelFreeMemBlock(m);
+}
+
 void *gpu_alloc(SceKernelMemBlockType type, unsigned int size, unsigned int alignment, unsigned int attribs, SceUID *uid)
 {
 	void *mem;
